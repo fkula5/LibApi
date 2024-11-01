@@ -1,0 +1,15 @@
+﻿services:
+  libapi:
+    image: libapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+  
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=library
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
