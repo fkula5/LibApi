@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibApi.Migrations
 {
     [DbContext(typeof(LibDbContext))]
-    [Migration("20241101233305_Initial")]
-    partial class Initial
+    [Migration("20241105151533_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,7 +47,7 @@ namespace LibApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Author");
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("LibApi.Entities.Book", b =>
@@ -97,7 +97,7 @@ namespace LibApi.Migrations
                     b.Property<int>("GenreId")
                         .HasColumnType("integer");
 
-                    b.HasIndex("BookId");
+                    b.HasKey("BookId", "GenreId");
 
                     b.HasIndex("GenreId");
 
@@ -112,7 +112,7 @@ namespace LibApi.Migrations
                     b.Property<int>("PublisherId")
                         .HasColumnType("integer");
 
-                    b.HasIndex("BookId");
+                    b.HasKey("BookId", "PublisherId");
 
                     b.HasIndex("PublisherId");
 
@@ -139,7 +139,7 @@ namespace LibApi.Migrations
                     b.Property<int>("MemberId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ReturnDate")
+                    b.Property<DateTime?>("ReturnDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
@@ -151,7 +151,7 @@ namespace LibApi.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("BorrowRecord");
+                    b.ToTable("BorrowRecords");
                 });
 
             modelBuilder.Entity("LibApi.Entities.Genre", b =>
@@ -168,7 +168,7 @@ namespace LibApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genre");
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("LibApi.Entities.Member", b =>
@@ -204,7 +204,7 @@ namespace LibApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Member");
+                    b.ToTable("Members");
                 });
 
             modelBuilder.Entity("LibApi.Entities.Publisher", b =>
@@ -233,7 +233,7 @@ namespace LibApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publisher");
+                    b.ToTable("Publishers");
                 });
 
             modelBuilder.Entity("LibApi.Entities.Reservation", b =>
@@ -262,7 +262,7 @@ namespace LibApi.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("LibApi.Entities.Book", b =>
@@ -279,13 +279,13 @@ namespace LibApi.Migrations
             modelBuilder.Entity("LibApi.Entities.BookGenres", b =>
                 {
                     b.HasOne("LibApi.Entities.Book", "Book")
-                        .WithMany()
+                        .WithMany("BookGenres")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LibApi.Entities.Genre", "Genre")
-                        .WithMany()
+                        .WithMany("BookGenres")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -298,13 +298,13 @@ namespace LibApi.Migrations
             modelBuilder.Entity("LibApi.Entities.BookPublishers", b =>
                 {
                     b.HasOne("LibApi.Entities.Book", "Book")
-                        .WithMany()
+                        .WithMany("BookPublishers")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LibApi.Entities.Publisher", "Publisher")
-                        .WithMany()
+                        .WithMany("BookPublishers")
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -350,6 +350,23 @@ namespace LibApi.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("LibApi.Entities.Book", b =>
+                {
+                    b.Navigation("BookGenres");
+
+                    b.Navigation("BookPublishers");
+                });
+
+            modelBuilder.Entity("LibApi.Entities.Genre", b =>
+                {
+                    b.Navigation("BookGenres");
+                });
+
+            modelBuilder.Entity("LibApi.Entities.Publisher", b =>
+                {
+                    b.Navigation("BookPublishers");
                 });
 #pragma warning restore 612, 618
         }

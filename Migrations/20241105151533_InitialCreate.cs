@@ -7,13 +7,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Author",
+                name: "Authors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -24,11 +24,11 @@ namespace LibApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Author", x => x.Id);
+                    table.PrimaryKey("PK_Authors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genre",
+                name: "Genres",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -37,11 +37,11 @@ namespace LibApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genre", x => x.Id);
+                    table.PrimaryKey("PK_Genres", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Member",
+                name: "Members",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -55,11 +55,11 @@ namespace LibApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Member", x => x.Id);
+                    table.PrimaryKey("PK_Members", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Publisher",
+                name: "Publishers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -71,7 +71,7 @@ namespace LibApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Publisher", x => x.Id);
+                    table.PrimaryKey("PK_Publishers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,9 +92,9 @@ namespace LibApi.Migrations
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Books_Author_AuthorId",
+                        name: "FK_Books_Authors_AuthorId",
                         column: x => x.AuthorId,
-                        principalTable: "Author",
+                        principalTable: "Authors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -108,6 +108,7 @@ namespace LibApi.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_BookGenres", x => new { x.BookId, x.GenreId });
                     table.ForeignKey(
                         name: "FK_BookGenres_Books_BookId",
                         column: x => x.BookId,
@@ -115,9 +116,9 @@ namespace LibApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookGenres_Genre_GenreId",
+                        name: "FK_BookGenres_Genres_GenreId",
                         column: x => x.GenreId,
-                        principalTable: "Genre",
+                        principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -131,6 +132,7 @@ namespace LibApi.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_BookPublishers", x => new { x.BookId, x.PublisherId });
                     table.ForeignKey(
                         name: "FK_BookPublishers_Books_BookId",
                         column: x => x.BookId,
@@ -138,15 +140,15 @@ namespace LibApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookPublishers_Publisher_PublisherId",
+                        name: "FK_BookPublishers_Publishers_PublisherId",
                         column: x => x.PublisherId,
-                        principalTable: "Publisher",
+                        principalTable: "Publishers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BorrowRecord",
+                name: "BorrowRecords",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -155,28 +157,28 @@ namespace LibApi.Migrations
                     MemberId = table.Column<int>(type: "integer", nullable: false),
                     BorrowDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ReturnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ReturnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BorrowRecord", x => x.Id);
+                    table.PrimaryKey("PK_BorrowRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BorrowRecord_Books_BookId",
+                        name: "FK_BorrowRecords_Books_BookId",
                         column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BorrowRecord_Member_MemberId",
+                        name: "FK_BorrowRecords_Members_MemberId",
                         column: x => x.MemberId,
-                        principalTable: "Member",
+                        principalTable: "Members",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservation",
+                name: "Reservations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -188,35 +190,25 @@ namespace LibApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservation", x => x.Id);
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservation_Books_BookId",
+                        name: "FK_Reservations_Books_BookId",
                         column: x => x.BookId,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservation_Member_MemberId",
+                        name: "FK_Reservations_Members_MemberId",
                         column: x => x.MemberId,
-                        principalTable: "Member",
+                        principalTable: "Members",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookGenres_BookId",
-                table: "BookGenres",
-                column: "BookId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_BookGenres_GenreId",
                 table: "BookGenres",
                 column: "GenreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookPublishers_BookId",
-                table: "BookPublishers",
-                column: "BookId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookPublishers_PublisherId",
@@ -229,23 +221,23 @@ namespace LibApi.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BorrowRecord_BookId",
-                table: "BorrowRecord",
+                name: "IX_BorrowRecords_BookId",
+                table: "BorrowRecords",
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BorrowRecord_MemberId",
-                table: "BorrowRecord",
+                name: "IX_BorrowRecords_MemberId",
+                table: "BorrowRecords",
                 column: "MemberId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservation_BookId",
-                table: "Reservation",
+                name: "IX_Reservations_BookId",
+                table: "Reservations",
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservation_MemberId",
-                table: "Reservation",
+                name: "IX_Reservations_MemberId",
+                table: "Reservations",
                 column: "MemberId");
         }
 
@@ -259,25 +251,25 @@ namespace LibApi.Migrations
                 name: "BookPublishers");
 
             migrationBuilder.DropTable(
-                name: "BorrowRecord");
+                name: "BorrowRecords");
 
             migrationBuilder.DropTable(
-                name: "Reservation");
+                name: "Reservations");
 
             migrationBuilder.DropTable(
-                name: "Genre");
+                name: "Genres");
 
             migrationBuilder.DropTable(
-                name: "Publisher");
+                name: "Publishers");
 
             migrationBuilder.DropTable(
                 name: "Books");
 
             migrationBuilder.DropTable(
-                name: "Member");
+                name: "Members");
 
             migrationBuilder.DropTable(
-                name: "Author");
+                name: "Authors");
         }
     }
 }

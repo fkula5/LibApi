@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-
-namespace LibApi.Entities;
+﻿namespace LibApi.Entities;
 
 public class Book
 {
@@ -13,4 +11,6 @@ public class Book
     public virtual Author Author { get; set; }
     public int TotalCopies { get; set; }
     public int AvailableCopies { get; set; }
+    public ICollection<BookPublishers> BookPublishers { get; set; }
+    public ICollection<BookGenres> BookGenres { get; set; }
 }

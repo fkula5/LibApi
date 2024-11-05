@@ -11,6 +11,6 @@ public class BorrowRecord
     public Member Member { get; set; }
     public DateTime BorrowDate { get; set; }
     public DateTime DueDate { get; set; }
-    public DateTime ReturnDate { get; set; }
+    public DateTime? ReturnDate { get; set; }
     public BorrowStatus Status { get; set; }
 }
