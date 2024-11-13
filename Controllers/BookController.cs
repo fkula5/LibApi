@@ -11,8 +11,8 @@ public class BookController(IBookService bookService) : ControllerBase
     [HttpGet]
     public ActionResult<List<BookDto>> GetAll()
     {
-        var booksDtos = bookService.GetAll();
-        return Ok(booksDtos);
+        var books = bookService.GetAll();
+        return Ok(books);
     }
 
     [HttpGet("{id}")]
@@ -25,7 +25,7 @@ public class BookController(IBookService bookService) : ControllerBase
     public ActionResult CreateBook([FromBody] CreateBookDto bookDto)
     {
         var id = bookService.Create(bookDto);
-        return Created($"/api/books/{id}", null);
+        return Created($"/api/books/{id}", id);
     }
 
     [HttpPut("{id}")]
