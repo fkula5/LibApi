@@ -1,5 +1,6 @@
 using LibApi.Entities;
 using LibApi.Seeder;
+using LibApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,15 +12,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<LibDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("LibDbContext")));
 builder.Services.AddTransient<AuthorSeeder>();
+builder.Services.AddTransient<MemberSeeder>();
+builder.Services.AddTransient<PublisherSeeder>();
+builder.Services.AddTransient<GenreSeeder>();
 builder.Services.AddTransient<BookGenresSeeder>();
 builder.Services.AddTransient<BookPublishersSeeder>();
 builder.Services.AddTransient<BookSeeder>();
 builder.Services.AddTransient<BorrowRecordsSeeder>();
-builder.Services.AddTransient<GenreSeeder>();
-builder.Services.AddTransient<MemberSeeder>();
-builder.Services.AddTransient<PublisherSeeder>();
 builder.Services.AddTransient<ReservationSeeder>();
 builder.Services.AddTransient<MainDbSeeder>();
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();

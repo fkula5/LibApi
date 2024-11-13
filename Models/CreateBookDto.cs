@@ -1,15 +1,14 @@
 ﻿namespace LibApi.Models;
 
-public class BookDto
+public class CreateBookDto
 {
-    public int Id { get; set; }
     public string Title { get; set; }
     public DateTime PublicationDate { get; set; }
     public string Language { get; set; }
     public string ISBN { get; set; }
-    public AuthorDto Author { get; set; }
+    public int AuthorId { get; set; }
     public int TotalCopies { get; set; }
     public int AvailableCopies { get; set; }
-    public List<PublisherDto> Publishers { get; set; }
-    public List<GenreDto> Genres { get; set; }
+    public List<int> GenreIds { get; set; }
+    public List<int> PublisherIds { get; set; }
 }
