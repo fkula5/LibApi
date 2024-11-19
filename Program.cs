@@ -24,6 +24,7 @@ builder.Services.AddTransient<MainDbSeeder>();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
