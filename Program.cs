@@ -25,6 +25,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<IBorrowRecordService, BorrowRecordService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
